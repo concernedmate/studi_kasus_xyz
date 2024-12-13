@@ -3,7 +3,7 @@ FROM golang:1.23.4-alpine AS build-go
 
 WORKDIR /usr/src
 
-COPY ./src .
+COPY . .
 
 RUN GOOS=linux GOARCH=amd64 go build -o ./app_bin64
 RUN mkdir /usr/app
@@ -22,11 +22,11 @@ ENV TZ=Asia/Jakarta
 
 WORKDIR /usr/app
 
-RUN adduser -u 1001 -D app
-
 COPY --from=build-go /usr/app /usr/app
-RUN chown -R app:app /usr/app
 
-USER app
+# uncomment below to use non root container
+# RUN adduser -u 1000 -D app
+# RUN chown -R app:app /usr/app
+# USER app
 
 CMD ["./app_bin64"]

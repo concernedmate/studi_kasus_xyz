@@ -21,10 +21,10 @@ func verifyPassword(password string, hash string) bool {
 	return err == nil
 }
 
-func processAuth(username string, grup string) (response entities.User, err error) {
+func processAuth(id int, username string) (response entities.User, err error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"id":       id,
 		"username": username,
-		"grup":     grup,
 		"exp":      time.Now().Add(time.Hour * 24).Unix(),
 	})
 
@@ -34,9 +34,9 @@ func processAuth(username string, grup string) (response entities.User, err erro
 	}
 
 	response = entities.User{
+		Id:          id,
 		AccessToken: access_token,
 		Username:    username,
-		Grup:        grup,
 	}
 
 	return response, nil
@@ -44,18 +44,18 @@ func processAuth(username string, grup string) (response entities.User, err erro
 
 // PUBLIC
 func Auth(data entities.Auth) (response entities.User, err error) {
+	var id_db int
 	var username_db string
 	var password_db string
-	var grup_db string
-	userRow := dbPool.QueryRow("SELECT Username, Password, Grup FROM users u LEFT JOIN grup g ON u.id_grup = g.id WHERE u.username = ?", data.Username)
-	err = userRow.Scan(&username_db, &password_db, &grup_db)
+	userRow := dbPool.QueryRow("SELECT id, username, password FROM user WHERE username = ?", data.Username)
+	err = userRow.Scan(&id_db, &username_db, &password_db)
 	if err != nil {
 		return entities.User{}, errors.New("user not found")
 	}
 
 	// auth
 	if verifyPassword(data.Password, password_db) {
-		result, err := processAuth(username_db, grup_db)
+		result, err := processAuth(id_db, username_db)
 		if err != nil {
 			return entities.User{}, err
 		}
@@ -67,7 +67,7 @@ func Auth(data entities.Auth) (response entities.User, err error) {
 func ChangePass(data entities.ChangePass) error {
 	var username_db string
 	var password_db string
-	userRow := dbPool.QueryRow("SELECT Username, Password FROM users WHERE username = ?", data.Username)
+	userRow := dbPool.QueryRow("SELECT username, password FROM user WHERE username = ?", data.Username)
 	err := userRow.Scan(&username_db, &password_db)
 	if err != nil {
 		return err
@@ -80,7 +80,7 @@ func ChangePass(data entities.ChangePass) error {
 			return err
 		}
 
-		_, err = dbPool.Query("UPDATE users SET password = ? WHERE username = ?", hashedPassword, data.Username)
+		_, err = dbPool.Query("UPDATE user SET password = ? WHERE username = ?", hashedPassword, data.Username)
 		if err != nil {
 			return err
 		}

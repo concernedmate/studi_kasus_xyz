@@ -28,11 +28,7 @@ func Auth(c *fiber.Ctx) error {
 	if err != nil {
 		return utils.Response(c, 500, "[Error]", err.Error())
 	}
-	return utils.Response(c, 200, "[Success]", fiber.Map{
-		"username":     response.Username,
-		"access_token": response.AccessToken,
-		"grup":         response.Grup,
-	})
+	return utils.Response(c, 200, "[Success]", response)
 }
 
 func ChangePass(c *fiber.Ctx) error {
@@ -55,5 +51,29 @@ func ChangePass(c *fiber.Ctx) error {
 	if err != nil {
 		return utils.Response(c, 500, "[Error]", err.Error())
 	}
+	return utils.Response(c, 200, "[Success]", nil)
+}
+
+func RegisterUser(c *fiber.Ctx) error {
+	var input entities.UserRegister
+
+	err := c.BodyParser(&input)
+	if err != nil {
+		if err == fiber.ErrUnprocessableEntity {
+			return utils.Response(c, 400, "[Bad Request] Unprocessable", err.(*fiber.Error).Code)
+		}
+		return utils.Response(c, 400, "[Bad Request]", err.Error())
+	}
+
+	err = utils.ValidateStruct(input)
+	if err != nil {
+		return utils.Response(c, 400, "[Bad Request]", err.Error())
+	}
+
+	err = models.RegisterUser(c.Context(), input)
+	if err != nil {
+		return utils.Response(c, 500, "[Error]", err.Error())
+	}
+
 	return utils.Response(c, 200, "[Success]", nil)
 }

@@ -1,3 +1,6 @@
-.env
-private.key
 tmp/
+db/
+src/logs/
+src/uploads/
+
+!.gitignore

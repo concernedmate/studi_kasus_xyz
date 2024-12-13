@@ -33,7 +33,7 @@ CREATE TABLE `cust_transaction` (
   `created_at` datetime NOT NULL DEFAULT (now()),
   PRIMARY KEY (`contract_no`),
   KEY `cust_transaction_customer_FK` (`id_customer`),
-  CONSTRAINT `cust_transaction_customer_FK` FOREIGN KEY (`id_customer`) REFERENCES `customer` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+  CONSTRAINT `cust_transaction_customer_FK` FOREIGN KEY (`id_customer`) REFERENCES `customer` (`id_user`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -54,7 +54,7 @@ DROP TABLE IF EXISTS `customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `customer` (
-  `id` int NOT NULL,
+  `id_user` int NOT NULL,
   `nik` varchar(100) NOT NULL,
   `full_name` varchar(100) NOT NULL,
   `legal_name` varchar(100) NOT NULL,
@@ -67,8 +67,9 @@ CREATE TABLE `customer` (
   `2nd_month_limit` int unsigned NOT NULL,
   `3rd_month_limit` int unsigned NOT NULL,
   `4th_month_limit` int unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `customer_unique` (`nik`)
+  PRIMARY KEY (`id_user`),
+  UNIQUE KEY `customer_unique` (`nik`),
+  CONSTRAINT `customer_user_FK` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -80,6 +81,32 @@ LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(100) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT (now()),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_unique` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -90,4 +117,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-12  7:38:27
+-- Dump completed on 2024-12-13  1:21:45

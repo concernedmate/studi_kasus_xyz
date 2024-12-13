@@ -1,9 +1,14 @@
 package entities
 
 type User struct {
-	AccessToken string
-	Username    string
-	Grup        string
+	Id          int    `json:"id"`
+	AccessToken string `json:"access_token"`
+	Username    string `json:"username"`
+}
+
+type UserRegister struct {
+	Username string
+	Password string
 }
 
 type Auth struct {

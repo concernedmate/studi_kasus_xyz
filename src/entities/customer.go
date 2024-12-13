@@ -1,7 +1,7 @@
 package entities
 
 type Customer struct {
-	Id               int    `json:"id"`
+	IdUser           int    `json:"id_user"`
 	Nik              string `json:"nik"`
 	FullName         string `json:"full_name"`
 	LegalName        string `json:"legal_name"`
@@ -17,6 +17,7 @@ type Customer struct {
 }
 
 type CustomerInsert struct {
+	IdUser           int    `json:"id_user" validate:"required"`
 	Nik              string `json:"nik" validate:"required"`
 	FullName         string `json:"full_name" validate:"required"`
 	LegalName        string `json:"legal_name" validate:"required"`
@@ -32,7 +33,7 @@ type CustomerInsert struct {
 }
 
 type CustomerUpdate struct {
-	Id               int     `json:"id" validate:"required"`
+	IdUser           int     `json:"id_user" validate:"required"`
 	Nik              *string `json:"nik" validate:"omitempty"`
 	FullName         *string `json:"full_name" validate:"omitempty"`
 	LegalName        *string `json:"legal_name" validate:"omitempty"`

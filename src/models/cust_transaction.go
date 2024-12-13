@@ -29,6 +29,9 @@ func GetTransactionFromCustID(ctx context.Context, id_cust int) (results []entit
 		WHERE id_customer = ?`,
 		id_cust,
 	)
+	if err != nil {
+		return nil, err
+	}
 
 	for rows.Next() {
 		var created_at time.Time

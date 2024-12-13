@@ -5,12 +5,11 @@ services:
       context: ./src
     container_name: app_xyz
     volumes:
-      - ./app/logs:/usr/app/logs
-      - ./app/uploads:/usr/app/uploads
-      - ./app/.env:/usr/app/.env
+      - ./src/logs:/usr/app/logs
+      - ./src/uploads:/usr/app/uploads
+      - ./src/.env:/usr/app/.env
     tty: true
     restart: always
-    user: app
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports: 

@@ -9,6 +9,7 @@ import (
 
 func CustomerRoutes(app *fiber.App) {
 	app.Get("/api/v1/customer", middlewares.Limiter(), controllers.GetCustDataByID)
+	app.Post("/api/v1/customer", middlewares.Limiter(), controllers.InsertCustData)
 	app.Put("/api/v1/customer", middlewares.Limiter(), controllers.UpdateCustData)
 
 	app.Get("/api/v1/customer/transaction", middlewares.Limiter(), controllers.GetTransactionFromCustID)

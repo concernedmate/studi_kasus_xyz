@@ -38,6 +38,7 @@ func main() {
 	// routes
 	routes.AuthRoutes(app)
 	routes.CustomerRoutes(app)
+	routes.FileRoutes(app)
 
 	err = app.Listen(":" + os.Getenv("APP_PORT"))
 	if err != nil {
